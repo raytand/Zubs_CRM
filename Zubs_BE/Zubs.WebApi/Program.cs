@@ -130,7 +130,7 @@ builder.Services.AddCors(options =>
     {
         policy
             .WithOrigins("http://localhost:5173",
-            "http://localhost")
+            "http://localhost", "https://zubs-crm.onrender.com")
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
@@ -140,7 +140,7 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-//app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 app.UseCors("Frontend");
 
 if (app.Environment.IsDevelopment())
