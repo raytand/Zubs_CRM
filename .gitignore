@@ -1,0 +1,61 @@
+#################################
+# Root ENV (DO NOT COMMIT)
+#################################
+.env
+.env.*
+!.env.example
+
+#################################
+# ASP.NET Core
+#################################
+**/bin/
+**/obj/
+**/*.user
+**/*.suo
+**/*.userosscache
+**/*.sln.docstates
+**/.vs/
+**/TestResults/
+
+# Rider / VS Code
+.idea/
+.vscode/
+
+#################################
+# Node / React
+#################################
+**/node_modules/
+**/build/
+**/dist/
+**/.next/
+**/.cache/
+**/coverage/
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+#################################
+# Logs
+#################################
+*.log
+logs/
+
+#################################
+# OS Files
+#################################
+.DS_Store
+Thumbs.db
+
+#################################
+# Docker (optional)
+#################################
+docker-data/
+pgdata/
+
+#################################
+# Local DB / SQLite
+#################################
+*.db
+*.sqlite
+*.sqlite3

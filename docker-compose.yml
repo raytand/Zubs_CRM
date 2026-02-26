@@ -1,0 +1,35 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16
+    restart: always
+    environment:
+        POSTGRES_DB: ${POSTGRES_DB}
+        POSTGRES_USER: ${POSTGRES_USER}
+        POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+        - pgdata:/var/lib/postgresql/data
+    ports:
+        - "5433:5432"  
+  api:
+    build: ./Zubs_BE
+    restart: always
+    environment:
+      ConnectionStrings__ZubsConnection: "Host=db;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}"
+      JwtOptions__Key: ${JWT_KEY}
+    depends_on:
+      - db
+    ports:
+      - "5000:8080"
+
+  frontend:
+    build: ./zubs_fe
+    restart: always
+    depends_on:
+      - api
+    ports:
+      - "80:80"
+
+volumes:
+  pgdata:

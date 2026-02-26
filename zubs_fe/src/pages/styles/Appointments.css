@@ -1,0 +1,536 @@
+.page {
+  padding: 24px;
+  background: #e0e9f6;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+}
+
+.content {
+  width: 100%;
+  max-width: 1400px; /* Increased to fit 4 days comfortably */
+}
+
+h1 {
+  color: #3e68a3;
+  margin-bottom: 12px;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.date-navigation {
+  display: flex;
+  gap: 8px;
+}
+
+/* ================= FORM ================= */
+.form {
+  display: grid;
+  gap: 10px;
+}
+
+input,
+select,
+textarea {
+  border: 1px solid #a1c6ea;
+  padding: 8px;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 14px;
+}
+
+textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.page button {
+  cursor: pointer;
+  background: #3e68a3;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+button:hover {
+  background: #2d4f7c;
+}
+
+button.danger {
+  background: #dc3545;
+  color: white;
+}
+
+button.danger:hover {
+  background: #c82333;
+}
+
+/* ================= 4-DAY GRID CONTAINER ================= */
+.four-day-container {
+  display: flex;
+  background: #ffffff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  max-height: 800px;
+  overflow-y: auto; /* Vertical scroll for time */
+  overflow-x: hidden; /* No horizontal scroll */
+}
+
+/* ================= TIME SIDEBAR ================= */
+.time-sidebar {
+  width: 70px;
+  flex-shrink: 0;
+  background: #f8fafc;
+  border-right: 2px solid #d0e0f5;
+  display: flex;
+  flex-direction: column;
+}
+
+.time-header {
+  height: 110px; /* Match day-header */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: #3e68a3;
+  border-bottom: 2px solid #d0e0f5;
+  font-size: 12px;
+  background: #f0f6ff;
+  flex-shrink: 0;
+}
+
+.time-labels {
+  position: relative;
+  background: #f8fafc;
+  flex: 1;
+  margin-top: 30px;
+}
+
+.time-label {
+  position: absolute;
+  right: 8px;
+  transform: translateY(-8px); /* Center text on the line */
+  font-weight: 600;
+  color: #3e68a3;
+  font-size: 12px;
+  background: #f8fafc;
+  padding: 0 4px;
+}
+
+.time-slot {
+  border-bottom: 1px solid #e1ecf7;
+  text-align: right;
+  padding: 4px 8px;
+  font-weight: 600;
+  color: #3e68a3;
+  font-size: 13px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: flex-start; /* Align text to top of the hour block */
+  padding-top: 2px;
+}
+
+/* ================= DAYS GRID ================= */
+.days-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(
+    4,
+    minmax(200px, 1fr)
+  ); /* 4 equal columns with minimum width */
+  min-width: 0; /* Allow grid to shrink */
+}
+
+.day-column {
+  border-right: 1px solid #e1ecf7;
+  display: flex;
+  flex-direction: column;
+}
+
+.day-column:last-child {
+  border-right: none;
+}
+
+.day-header {
+  height: 90px; /* Reduced from 100px */
+  background: linear-gradient(135deg, #3e68a3 0%, #4a7bc4 100%);
+  color: white;
+  padding: 10px; /* Reduced from 12px */
+  text-align: center;
+  border-bottom: 2px solid #2d4f7c;
+  flex-shrink: 0;
+}
+
+.day-name {
+  font-size: 13px; /* Reduced from 14px */
+  font-weight: 600;
+  text-transform: capitalize;
+  margin-bottom: 4px;
+}
+
+.day-date {
+  font-size: 16px; /* Reduced from 18px */
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.day-count {
+  font-size: 10px; /* Reduced from 11px */
+  opacity: 0.9;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 3px 8px;
+  border-radius: 12px;
+  display: inline-block;
+}
+
+/* ================= DAY TIMELINE ================= */
+.day-timeline {
+  position: relative;
+  background: #fafbfc;
+  /* Height is set inline via style attribute to match time slots */
+}
+
+/* Grid lines for visual alignment */
+.grid-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: #d0e0f5; /* Made more visible */
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ================= APPOINTMENT CARDS ================= */
+.appointment-card {
+  position: absolute;
+  background: #fff;
+  border-radius: 6px;
+  border: 1px solid #a1c6ea;
+  padding: 6px 8px;
+  box-sizing: border-box;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+  /* left, width, top, height are set inline via style attribute */
+}
+
+.appointment-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+}
+
+.appointment-card.status-0 {
+  border-left: 4px solid #3e68a3;
+  background: linear-gradient(to right, #e8f2ff 0%, #ffffff 8px);
+}
+
+.appointment-card.status-1 {
+  border-left: 4px solid #28a745;
+  background: linear-gradient(to right, #e6f9ea 0%, #ffffff 8px);
+}
+
+.appointment-card.status-2 {
+  border-left: 4px solid #dc3545;
+  background: linear-gradient(to right, #fdeaec 0%, #ffffff 8px);
+  opacity: 0.7;
+}
+
+.apt-time {
+  font-weight: 700;
+  color: #3e68a3;
+  font-size: 11px; /* Reduced from 12px */
+  margin-bottom: 3px; /* Reduced from 4px */
+}
+
+.apt-patient {
+  font-size: 12px; /* Reduced from 13px */
+  margin-bottom: 2px; /* Reduced from 3px */
+  color: #04080f;
+}
+
+.apt-doctor,
+.apt-service {
+  font-size: 10px; /* Reduced from 11px */
+  color: #5a6c7d;
+  margin-bottom: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.apt-notes {
+  font-size: 9px; /* Reduced from 10px */
+  color: #7a8a99;
+  font-style: italic;
+  margin-top: 3px; /* Reduced from 4px */
+  padding-top: 3px; /* Reduced from 4px */
+  border-top: 1px solid #e8f0fa;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.apt-actions {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.appointment-card:hover .apt-actions {
+  opacity: 1;
+}
+
+.apt-actions button {
+  padding: 2px 6px;
+  font-size: 12px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid #a1c6ea;
+  color: #3e68a3;
+  min-width: auto;
+}
+
+.apt-actions button:hover {
+  background: #e8f2ff;
+}
+
+.apt-actions button.danger {
+  border-color: #dc3545;
+  color: #dc3545;
+  background: rgba(255, 255, 255, 0.95);
+}
+
+.apt-actions button.danger:hover {
+  background: #fdeaec;
+}
+
+/* ================= MODAL ================= */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modal {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 20px;
+  border: 1px solid #a1c6ea;
+  min-width: 320px;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal h2 {
+  color: #3e68a3;
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.form-actions button {
+  padding: 8px 16px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.form-actions button[type="submit"] {
+  background: #3e68a3;
+  color: #fff;
+}
+
+.form-actions button[type="submit"]:hover {
+  background: #2d4f7c;
+}
+
+.form-actions button[type="button"] {
+  background: #e1ecf7;
+  color: #3e68a3;
+}
+
+.form-actions button[type="button"]:hover {
+  background: #d0e0f5;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 1100px) {
+  .days-grid {
+    grid-template-columns: repeat(3, minmax(180px, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .days-grid {
+    grid-template-columns: repeat(2, minmax(200px, 1fr));
+  }
+
+  .day-header {
+    height: 90px;
+    padding: 10px;
+  }
+
+  .time-header {
+    height: 90px;
+  }
+
+  .day-date {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding: 12px;
+  }
+
+  .four-day-container {
+    max-height: 600px;
+  }
+
+  .days-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .time-sidebar {
+    width: 50px;
+  }
+
+  .time-label {
+    font-size: 11px;
+    right: 4px;
+  }
+
+  .day-header {
+    height: 80px;
+    padding: 15px;
+  }
+
+  .time-header {
+    height: 80px;
+    font-size: 11px;
+  }
+
+  .day-name {
+    font-size: 12px;
+  }
+
+  .day-date {
+    font-size: 14px;
+  }
+
+  .day-count {
+    font-size: 10px;
+  }
+
+  .appointment-card {
+    padding: 4px 6px;
+  }
+
+  .apt-time {
+    font-size: 11px;
+  }
+
+  .apt-patient {
+    font-size: 12px;
+  }
+
+  .apt-doctor,
+  .apt-service {
+    font-size: 10px;
+  }
+
+  .apt-notes {
+    font-size: 9px;
+  }
+}
+
+@media (max-width: 480px) {
+  .days-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .date-navigation {
+    justify-content: center;
+  }
+}
+
+/* ================= ACCESSIBILITY ================= */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid #3e68a3;
+  outline-offset: 2px;
+}
+
+.appointment-card:focus-visible {
+  outline: 2px solid #3e68a3;
+  outline-offset: 2px;
+}
+
+/* ================= SCROLLBAR STYLING ================= */
+.four-day-container::-webkit-scrollbar,
+.days-grid::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.four-day-container::-webkit-scrollbar-track,
+.days-grid::-webkit-scrollbar-track {
+  background: #f0f6ff;
+}
+
+.four-day-container::-webkit-scrollbar-thumb,
+.days-grid::-webkit-scrollbar-thumb {
+  background: #a1c6ea;
+  border-radius: 4px;
+}
+
+.four-day-container::-webkit-scrollbar-thumb:hover,
+.days-grid::-webkit-scrollbar-thumb:hover {
+  background: #7aa3d6;
+}
