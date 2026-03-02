@@ -28,8 +28,8 @@ const TEETH_NUMBERS = {
     left: [21, 22, 23, 24, 25, 26, 27, 28],
   },
   lower: {
-    left: [48, 47, 46, 45, 44, 43, 42, 41],
-    right: [31, 32, 33, 34, 35, 36, 37, 38],
+    left: [31, 32, 33, 34, 35, 36, 37, 38],
+    right: [48, 47, 46, 45, 44, 43, 42, 41],
   },
 };
 
@@ -378,7 +378,6 @@ export default function DentalCharts() {
                   required
                   type="number"
                   min="1"
-                  max="32"
                   placeholder="1-32"
                   value={form.toothNumber}
                   onChange={(e) =>
