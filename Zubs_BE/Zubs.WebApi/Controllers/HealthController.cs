@@ -7,10 +7,12 @@ namespace Zubs.WebApi.Controllers
     public class HealthController : ControllerBase
     {
         [HttpGet("health")]
+        [HttpHead("health")]
         public ActionResult Health()
         {
             return Ok("Healthy");
         }
 
     }
+
 }
