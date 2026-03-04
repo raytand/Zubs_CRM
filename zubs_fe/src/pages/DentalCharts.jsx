@@ -10,7 +10,6 @@ import "./styles/DentalCharts.css";
 
 const emptyForm = { toothNumber: "", status: "", notes: "" };
 
-// Tooth status options
 const STATUSES = [
   { value: "Healthy", label: "Здоровий", color: "#28a745" },
   { value: "Cavity", label: "Карієс", color: "#ffc107" },
@@ -21,7 +20,6 @@ const STATUSES = [
   { value: "Implant", label: "Імплант", color: "#20c997" },
 ];
 
-// Standard teeth numbering (adult: 1-32)
 const TEETH_NUMBERS = {
   upper: {
     right: [18, 17, 16, 15, 14, 13, 12, 11],
@@ -33,7 +31,6 @@ const TEETH_NUMBERS = {
   },
 };
 
-// ================= MODAL =================
 const Modal = ({ onClose, children }) => (
   <div className="modal-backdrop" onClick={onClose}>
     <div className="modal" onClick={(e) => e.stopPropagation()}>
@@ -42,7 +39,6 @@ const Modal = ({ onClose, children }) => (
   </div>
 );
 
-// ================= TOOTH DIAGRAM =================
 const ToothDiagram = ({ charts, onToothClick }) => {
   const getToothStatus = (toothNumber) => {
     const chart = charts.find((c) => c.toothNumber === toothNumber.toString());
@@ -82,7 +78,10 @@ const ToothDiagram = ({ charts, onToothClick }) => {
         </div>
       </div>
 
-      {/* Lower jaw */}
+      {/* Separator between upper and lower jaw */}
+      <div className="jaw-separator"></div>
+
+      {/* Lower jaw — right side first to mirror upper jaw */}
       <div className="jaw lower-jaw">
         <div className="jaw-side right">
           {TEETH_NUMBERS.lower.right.map((num) => (
@@ -100,7 +99,6 @@ const ToothDiagram = ({ charts, onToothClick }) => {
   );
 };
 
-// ================= MAIN COMPONENT =================
 export default function DentalCharts() {
   const [patients, setPatients] = useState([]);
   const [selectedPatient, setSelectedPatient] = useState("");
@@ -128,7 +126,6 @@ export default function DentalCharts() {
       setCharts([]);
       return;
     }
-
     try {
       const data = await getDentalChartsByPatient(patientId);
       setCharts(data || []);
@@ -139,15 +136,12 @@ export default function DentalCharts() {
   };
 
   useEffect(() => {
-    if (selectedPatient) {
-      loadCharts(selectedPatient);
-    }
+    if (selectedPatient) loadCharts(selectedPatient);
   }, [selectedPatient]);
 
   const submitForm = async (e) => {
     e.preventDefault();
     setError("");
-
     try {
       const dto = {
         toothNumber: form.toothNumber,
@@ -155,13 +149,11 @@ export default function DentalCharts() {
         notes: form.notes,
         patientId: selectedPatient,
       };
-
       if (editingId) {
         await updateDentalChart({ ...dto, id: editingId });
       } else {
         await createDentalChart(dto);
       }
-
       setForm(emptyForm);
       setEditingId(null);
       setShowModal(false);
@@ -188,7 +180,6 @@ export default function DentalCharts() {
     const existingChart = charts.find(
       (c) => c.toothNumber === toothNumber.toString(),
     );
-
     if (existingChart) {
       startEdit(existingChart);
     } else {
@@ -200,7 +191,6 @@ export default function DentalCharts() {
 
   const removeChart = async (id) => {
     if (!confirm("Видалити запис?")) return;
-
     try {
       await deleteDentalChart(id);
       loadCharts(selectedPatient);
@@ -211,8 +201,6 @@ export default function DentalCharts() {
   };
 
   const selectedPatientData = patients.find((p) => p.id === selectedPatient);
-
-  // Get status statistics
   const statusStats = STATUSES.map((status) => ({
     ...status,
     count: charts.filter((c) => c.status === status.value).length,
@@ -221,7 +209,6 @@ export default function DentalCharts() {
   return (
     <div className="page">
       <div className="content">
-        {/* Header */}
         <div className="page-header">
           <div>
             <h1>Зубні карти</h1>
@@ -233,7 +220,6 @@ export default function DentalCharts() {
           </div>
         </div>
 
-        {/* Patient Selector */}
         <div className="patient-selector-container">
           <label className="selector-label">Пацієнт:</label>
           <select
@@ -259,7 +245,6 @@ export default function DentalCharts() {
 
         {selectedPatient ? (
           <>
-            {/* Statistics */}
             {statusStats.length > 0 && (
               <div className="status-stats">
                 {statusStats.map((stat) => (
@@ -275,7 +260,6 @@ export default function DentalCharts() {
               </div>
             )}
 
-            {/* Tooth Diagram */}
             <div className="diagram-container">
               <h2>Зубна формула</h2>
               <p className="diagram-hint">
@@ -284,7 +268,6 @@ export default function DentalCharts() {
               <ToothDiagram charts={charts} onToothClick={handleToothClick} />
             </div>
 
-            {/* Legend */}
             <div className="legend">
               <h3>Легенда:</h3>
               <div className="legend-items">
@@ -300,7 +283,6 @@ export default function DentalCharts() {
               </div>
             </div>
 
-            {/* Charts List */}
             {charts.length > 0 && (
               <div className="charts-list">
                 <h2>Детальна інформація</h2>
@@ -366,7 +348,6 @@ export default function DentalCharts() {
           </div>
         )}
 
-        {/* Modal Form */}
         {showModal && (
           <Modal onClose={() => setShowModal(false)}>
             <form className="dental-form" onSubmit={submitForm}>
@@ -378,7 +359,8 @@ export default function DentalCharts() {
                   required
                   type="number"
                   min="1"
-                  placeholder="1-32"
+                  max="48"
+                  placeholder="1-48"
                   value={form.toothNumber}
                   onChange={(e) =>
                     setForm({ ...form, toothNumber: e.target.value })

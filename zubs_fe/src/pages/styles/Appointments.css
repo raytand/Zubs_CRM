@@ -8,7 +8,7 @@
 
 .content {
   width: 100%;
-  max-width: 1400px; /* Increased to fit 4 days comfortably */
+  max-width: 1400px;
 }
 
 h1 {
@@ -80,17 +80,19 @@ button.danger:hover {
   display: flex;
   background: #ffffff;
   border-radius: 8px;
-  overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   max-height: 800px;
-  overflow-y: auto; /* Vertical scroll for time */
-  overflow-x: hidden; /* No horizontal scroll */
+  overflow-y: auto;
+  overflow-x: auto; /* Allow horizontal scroll on narrow screens */
 }
 
 /* ================= TIME SIDEBAR ================= */
 .time-sidebar {
   width: 70px;
-  flex-shrink: 0;
+  flex-shrink: 0; /* Never shrink or scroll away */
+  position: sticky;
+  left: 0;
+  z-index: 20;
   background: #f8fafc;
   border-right: 2px solid #d0e0f5;
   display: flex;
@@ -98,7 +100,8 @@ button.danger:hover {
 }
 
 .time-header {
-  height: 110px; /* Match day-header */
+  /* Must exactly match .day-header height + padding at every breakpoint */
+  height: 90px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -108,6 +111,10 @@ button.danger:hover {
   font-size: 12px;
   background: #f0f6ff;
   flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  z-index: 21;
+  box-sizing: border-box;
 }
 
 .time-labels {
@@ -120,7 +127,7 @@ button.danger:hover {
 .time-label {
   position: absolute;
   right: 8px;
-  transform: translateY(-8px); /* Center text on the line */
+  transform: translateY(-8px);
   font-weight: 600;
   color: #3e68a3;
   font-size: 12px;
@@ -128,28 +135,13 @@ button.danger:hover {
   padding: 0 4px;
 }
 
-.time-slot {
-  border-bottom: 1px solid #e1ecf7;
-  text-align: right;
-  padding: 4px 8px;
-  font-weight: 600;
-  color: #3e68a3;
-  font-size: 13px;
-  box-sizing: border-box;
-  display: flex;
-  align-items: flex-start; /* Align text to top of the hour block */
-  padding-top: 2px;
-}
-
 /* ================= DAYS GRID ================= */
 .days-grid {
   flex: 1;
   display: grid;
-  grid-template-columns: repeat(
-    4,
-    minmax(200px, 1fr)
-  ); /* 4 equal columns with minimum width */
-  min-width: 0; /* Allow grid to shrink */
+  /* Always 4 columns with a minimum width so they never collapse under the sidebar */
+  grid-template-columns: repeat(4, minmax(160px, 1fr));
+  min-width: 0;
 }
 
 .day-column {
@@ -163,30 +155,38 @@ button.danger:hover {
 }
 
 .day-header {
-  height: 90px; /* Reduced from 100px */
+  height: 90px;
   background: linear-gradient(135deg, #3e68a3 0%, #4a7bc4 100%);
   color: white;
-  padding: 10px; /* Reduced from 12px */
+  padding: 10px;
   text-align: center;
   border-bottom: 2px solid #2d4f7c;
   flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .day-name {
-  font-size: 13px; /* Reduced from 14px */
+  font-size: 13px;
   font-weight: 600;
   text-transform: capitalize;
   margin-bottom: 4px;
 }
 
 .day-date {
-  font-size: 16px; /* Reduced from 18px */
+  font-size: 16px;
   font-weight: 700;
   margin-bottom: 6px;
 }
 
 .day-count {
-  font-size: 10px; /* Reduced from 11px */
+  font-size: 10px;
   opacity: 0.9;
   background: rgba(255, 255, 255, 0.2);
   padding: 3px 8px;
@@ -198,16 +198,14 @@ button.danger:hover {
 .day-timeline {
   position: relative;
   background: #fafbfc;
-  /* Height is set inline via style attribute to match time slots */
 }
 
-/* Grid lines for visual alignment */
 .grid-line {
   position: absolute;
   left: 0;
   right: 0;
   height: 1px;
-  background: #d0e0f5; /* Made more visible */
+  background: #d0e0f5;
   pointer-events: none;
   z-index: 1;
 }
@@ -225,7 +223,6 @@ button.danger:hover {
   transition: all 0.2s;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   z-index: 2;
-  /* left, width, top, height are set inline via style attribute */
 }
 
 .appointment-card:hover {
@@ -252,19 +249,19 @@ button.danger:hover {
 .apt-time {
   font-weight: 700;
   color: #3e68a3;
-  font-size: 11px; /* Reduced from 12px */
-  margin-bottom: 3px; /* Reduced from 4px */
+  font-size: 11px;
+  margin-bottom: 3px;
 }
 
 .apt-patient {
-  font-size: 12px; /* Reduced from 13px */
-  margin-bottom: 2px; /* Reduced from 3px */
+  font-size: 12px;
+  margin-bottom: 2px;
   color: #04080f;
 }
 
 .apt-doctor,
 .apt-service {
-  font-size: 10px; /* Reduced from 11px */
+  font-size: 10px;
   color: #5a6c7d;
   margin-bottom: 2px;
   overflow: hidden;
@@ -273,11 +270,11 @@ button.danger:hover {
 }
 
 .apt-notes {
-  font-size: 9px; /* Reduced from 10px */
+  font-size: 9px;
   color: #7a8a99;
   font-style: italic;
-  margin-top: 3px; /* Reduced from 4px */
-  padding-top: 3px; /* Reduced from 4px */
+  margin-top: 3px;
+  padding-top: 3px;
   border-top: 1px solid #e8f0fa;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -386,30 +383,9 @@ button.danger:hover {
 }
 
 /* ================= RESPONSIVE ================= */
-@media (max-width: 1100px) {
-  .days-grid {
-    grid-template-columns: repeat(3, minmax(180px, 1fr));
-  }
-}
-
-@media (max-width: 900px) {
-  .days-grid {
-    grid-template-columns: repeat(2, minmax(200px, 1fr));
-  }
-
-  .day-header {
-    height: 90px;
-    padding: 10px;
-  }
-
-  .time-header {
-    height: 90px;
-  }
-
-  .day-date {
-    font-size: 16px;
-  }
-}
+/* On narrower screens the container scrolls horizontally — no need to
+   reduce column count, because that was causing the "days hiding under"
+   problem. The time sidebar stays sticky on the left at all widths. */
 
 @media (max-width: 768px) {
   .page {
@@ -420,8 +396,9 @@ button.danger:hover {
     max-height: 600px;
   }
 
+  /* Give each day a sensible minimum so 4 days are reachable by scrolling */
   .days-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(4, minmax(140px, 1fr));
   }
 
   .time-sidebar {
@@ -433,13 +410,14 @@ button.danger:hover {
     right: 4px;
   }
 
+  /* Keep time-header height in sync with day-header at this breakpoint */
+  .time-header,
   .day-header {
     height: 80px;
-    padding: 15px;
+    padding: 8px;
   }
 
   .time-header {
-    height: 80px;
     font-size: 11px;
   }
 
@@ -478,10 +456,6 @@ button.danger:hover {
 }
 
 @media (max-width: 480px) {
-  .days-grid {
-    grid-template-columns: 1fr;
-  }
-
   .actions {
     flex-direction: column;
     align-items: stretch;
@@ -513,24 +487,20 @@ textarea:focus-visible {
 }
 
 /* ================= SCROLLBAR STYLING ================= */
-.four-day-container::-webkit-scrollbar,
-.days-grid::-webkit-scrollbar {
+.four-day-container::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
-.four-day-container::-webkit-scrollbar-track,
-.days-grid::-webkit-scrollbar-track {
+.four-day-container::-webkit-scrollbar-track {
   background: #f0f6ff;
 }
 
-.four-day-container::-webkit-scrollbar-thumb,
-.days-grid::-webkit-scrollbar-thumb {
+.four-day-container::-webkit-scrollbar-thumb {
   background: #a1c6ea;
   border-radius: 4px;
 }
 
-.four-day-container::-webkit-scrollbar-thumb:hover,
-.days-grid::-webkit-scrollbar-thumb:hover {
+.four-day-container::-webkit-scrollbar-thumb:hover {
   background: #7aa3d6;
 }
