@@ -11,7 +11,7 @@ using Xunit;
 
 namespace Zubs.Tests;
 
-public class UnitTest1
+public class AuthTests
 {
     [Fact]
     public void JwtTokenService_Generates_Jwt_String()
