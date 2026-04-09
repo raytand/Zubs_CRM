@@ -27,33 +27,27 @@ public class PaymentService : IPaymentService
     {
         var entity = _mapper.Map<Payment>(dto);
         entity.Id = Guid.NewGuid();
-
         await _repo.AddAsync(entity);
-
         return _mapper.Map<PaymentDto>(entity);
     }
 
     public async Task UpdateAsync(PaymentUpdateDto dto)
     {
         if (dto.Id == Guid.Empty)
-        {
             throw new ArgumentException("Payment ID cannot be empty.");
-        } 
-        var entity = await _repo.GetByIdAsync(dto.Id);
-        if (entity == null)
-        {
-            throw new KeyNotFoundException($"Payment with ID {dto.Id} not found.");
-        }
-        _mapper.Map(dto, entity);
 
+        var entity = await _repo.GetByIdAsync(dto.Id)
+            ?? throw new KeyNotFoundException($"Payment with ID {dto.Id} not found.");
+
+        _mapper.Map(dto, entity);
         await _repo.UpdateAsync(entity);
     }
+
     public async Task DeleteAsync(Guid id)
     {
         var entity = await _repo.GetByIdAsync(id);
-        if (entity != null)
-        {
-            await _repo.DeleteAsync(id);
-        }
+        if (entity is null) return;
+
+        await _repo.DeleteAsync(id);
     }
 }

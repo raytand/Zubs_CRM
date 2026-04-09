@@ -12,14 +12,22 @@ services:
         - pgdata:/var/lib/postgresql/data
     ports:
         - "5433:5432"  
+  redis:
+    image: redis:7-alpine
+    restart: always
+    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru
+    ports:
+      - "6379:6379"
   api:
     build: ./Zubs_BE
     restart: always
     environment:
       ConnectionStrings__ZubsConnection: "Host=db;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}"
+      ConnectionStrings__Redis: "redis:6379"
       JwtOptions__Key: ${JWT_KEY}
     depends_on:
       - db
+      - redis
     ports:
       - "5000:8080"
 
